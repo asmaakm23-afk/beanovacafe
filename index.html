@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sip &amp; Create</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Pacifico&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <div id="stage"></div>
+  <div id="labels"></div>
+
+  <div class="topbar">
+    <div class="brand">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="17" fill="#C3D7DC"/><path d="M17 27V15" stroke="#4F7479" stroke-width="2" stroke-linecap="round"/><path d="M17 23c-3-1-5-3-5.5-6 3 .5 5 2.5 5.5 6z" fill="#4F7479"/><path d="M11 8l3 3 3-4 3 4 3-3v5.5a6 6 0 0 1-12 0z" fill="#E9B9AC"/></svg>
+      <div><h1 class="latin">Sip &amp; Create</h1><p>Café &amp; creative workshop · 2 floors · 12 × 7 m</p></div>
+    </div>
+    <div class="modes" role="group" aria-label="View mode">
+      <button id="m-orbit" aria-pressed="true"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="8" cy="8" rx="6.5" ry="3"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg>Explore</button>
+      <button id="m-walk" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="3" r="1.6"/><path d="M8 5v5l-2.5 4.5M8 10l2.5 4.5M5 7.5h6"/></svg>Walk</button>
+      <button id="m-plan" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="12" height="12"/><path d="M2 8h6V2M8 11v3"/></svg>Floor plan</button>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false">Menu</button>
+  </div>
+
+  <aside class="panel closed" id="panel">
+    <section>
+      <h2>FLOOR</h2>
+      <div class="seg" id="floors">
+        <button data-f="both" aria-pressed="true">Both floors</button>
+        <button data-f="ground" aria-pressed="false">Ground</button>
+        <button data-f="upper" aria-pressed="false">Upper</button>
+        <button data-f="whole" aria-pressed="false">Whole building</button>
+      </div>
+    </section>
+    <section>
+      <h2>DISPLAY</h2>
+      <div class="toggles">
+        <button class="tg" id="t-walls" aria-pressed="true"><i></i>Cut away walls</button>
+        <button class="tg" id="t-night" aria-pressed="false"><i></i>Evening light</button>
+        <button class="tg" id="t-rotate" aria-pressed="false"><i></i>Auto-rotate</button>
+      </div>
+    </section>
+    <section>
+      <h2>AREAS</h2>
+      <div class="zones" id="zoneList"></div>
+    </section>
+    <section>
+      <h2>KEY FIGURES</h2>
+      <div class="stats">
+        <div class="stat"><b>84 m²</b><span>per floor</span></div>
+        <div class="stat"><b>168 m²</b><span>total, both floors</span></div>
+        <div class="stat"><b>35</b><span>customer seats</span></div>
+        <div class="stat"><b>3.2 m</b><span>floor-to-floor height</span></div>
+      </div>
+    </section>
+    <section>
+      <h2>COLOUR PALETTE</h2>
+      <div class="swatches"><span style="background:#F3EDE3"></span><span style="background:#6A9398"></span><span style="background:#C3D7DC"></span><span style="background:#D4B086"></span><span style="background:#E9B9AC"></span><span style="background:#AEB6AF"></span><span style="background:#C8A266"></span><span style="background:#DADBD5"></span></div>
+    </section>
+  </aside>
+
+  <div class="card" id="card" hidden>
+    <div class="row"><span class="n" id="cN">1</span><h3 id="cT"></h3><button class="x" id="cX" aria-label="Close">×</button></div>
+    <div class="meta"><span class="chip f" id="cF"></span><span class="chip" id="cD"></span></div>
+    <img id="cImg" alt="" hidden>
+    <p id="cP"></p>
+    <div class="acts"><button class="btn" id="cWalk">Walk here</button><button class="btn ghost" id="cPlan">Show on plan</button></div>
+  </div>
+
+  <div class="hint" id="hint"></div>
+  <div class="pad" id="pad" hidden>
+    <button class="fl" id="padFloor">Other<br>floor</button>
+    <button class="up" data-k="f" aria-label="Forward">↑</button>
+    <button class="ex" id="padExit">Exit</button>
+    <button class="lf" data-k="l" aria-label="Left">←</button>
+    <button class="dn" data-k="b" aria-label="Back">↓</button>
+    <button class="rt" data-k="r" aria-label="Right">→</button>
+  </div>
+
+  <div id="loader"><div>Setting up the café…<small>Building both floors and the furniture</small></div></div>
+</div>
+
+<script src="js/vendor/three.min.js"></script>
+<script src="js/vendor/OrbitControls.js"></script>
+<script src="js/vendor/RoomEnvironment.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
