@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
 <title>Beanova</title>
 <style>[hidden]{display:none!important}html,body{margin:0}</style>
 <title>Beanova</title>
@@ -159,7 +158,7 @@ button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
       <div class="stats">
         <div class="stat"><b>84 m²</b><span>per floor</span></div>
         <div class="stat"><b>168 m²</b><span>total, both floors</span></div>
-        <div class="stat"><b>35</b><span>customer seats</span></div>
+        <div class="stat"><b>43</b><span>customer seats</span></div>
         <div class="stat"><b>3.2 m</b><span>floor-to-floor height</span></div>
       </div>
     </section>
@@ -323,7 +322,7 @@ function makeTextures(){
     const it=[['Espresso','12'],['Latte','16'],['Iced Latte','17'],['Spanish Latte','18'],['Matcha Latte','19'],['Croissant','9'],['Cookie','7']]; g.font='500 27px '+AR;
     it.forEach((a,i)=>{ const y=148+i*38; g.fillStyle='#F4EFE6'; g.textAlign='left'; g.fillText(a[0],50,y); g.textAlign='right'; g.fillText(a[1]+' SAR',w-50,y); }); g.fillStyle='#E9B9AC'; g.textAlign='center'; g.font='600 22px '+AR; g.fillText('Order here · pay & collect at the window',w/2,h-18); });
   const small=(txt,bg,fg)=>ctex(512,128,(g,w,h)=>{ g.fillStyle=bg; g.fillRect(0,0,w,h); g.textAlign='center'; g.fillStyle=fg; g.font='600 52px '+KUFI; g.fillText(txt,w/2,86); });
-  TX.wc=small('Restroom','#F7F2E9','#2F4A48'); TX.self=small('Tool station','#6A9398','#FFF8F2'); TX.beans=small('Specialty beans','#EDCB9E','#2F4A48'); TX.kitchen=small('Kitchen','#F7F2E9','#2F4A48'); TX.books=small('Art supplies','#C3D7DC','#2F4A48');
+  TX.wc=small('Restroom','#F7F2E9','#2F4A48'); TX.self=small('Tool station','#6A9398','#FFF8F2'); TX.beans=small('Specialty beans','#EDCB9E','#2F4A48'); TX.kitchen=small('Kitchen','#F7F2E9','#2F4A48'); TX.books=small('Art supplies','#C3D7DC','#2F4A48'); TX.games=small('Games','#ECC4C3','#545A2B');
 }
 
 /* ---------- renderer / scene ---------- */
@@ -469,6 +468,74 @@ function shelfUnit(p,x,y,z,rot,w,h,d,levels,frame,fill){
   }
   return g;
 }
+/* ---------- games shelf ---------- */
+function gameTex(title,sub,bg,fg,icon){
+  return ctex(320,200,(g,w,h)=>{
+    g.fillStyle=bg; g.fillRect(0,0,w,h); g.strokeStyle=fg; g.globalAlpha=.35; g.lineWidth=4; g.strokeRect(10,10,w-20,h-20); g.globalAlpha=1;
+    g.fillStyle=fg;
+    if(icon==='suits'){ g.font='44px '+AR; g.textAlign='center'; g.fillText('♠ ♥ ♦ ♣',w/2,80); }
+    if(icon==='grid'){ for(let i=0;i<6;i++)for(let j=0;j<3;j++){ g.globalAlpha=(i+j)%2?.85:.3; g.fillRect(60+i*34,26+j*20,30,16);} g.globalAlpha=1; }
+    if(icon==='chips'){ ['#C0392B','#2E6FA8','#2E8B57'].forEach((c,i)=>{ g.fillStyle=c; g.beginPath(); g.arc(110+i*50,62,18,0,7); g.fill(); }); g.fillStyle=fg; }
+    if(icon==='cross'){ g.fillRect(140,22,40,90); g.fillRect(105,47,110,40); g.fillStyle=bg; for(let i=0;i<5;i++){ g.beginPath(); g.arc(160,30+i*17,4,0,7); g.fill(); g.beginPath(); g.arc(113+i*24,67,4,0,7); g.fill(); } g.fillStyle=fg; }
+    if(icon==='dots'){ for(let k=0;k<2;k++){ g.fillRect(100+k*70,26,56,84); } g.fillStyle=bg; [[128,48],[128,88],[198,40],[198,68],[198,96]].forEach(([x,y])=>{ g.beginPath(); g.arc(x,y,6,0,7); g.fill(); }); g.fillStyle=fg; }
+    if(icon==='knight'){ g.font='76px '+AR; g.textAlign='center'; g.fillText('♞',w/2,100); }
+    if(icon==='tower'){ for(let r=0;r<5;r++) for(let k=0;k<3;k++) g.fillRect(118+k*28,26+r*17,24,13); }
+    if(icon==='letters'){ g.font='700 30px '+AR; g.textAlign='center'; ['W','O','R','D'].forEach((c,i)=>{ g.fillStyle=fg; g.fillRect(84+i*40,40,34,34); g.fillStyle=bg; g.fillText(c,101+i*40,68); }); g.fillStyle=fg; }
+    g.textAlign='center'; g.font='700 38px '+KUFI; g.fillText(title,w/2,158); g.font='500 18px '+AR; g.globalAlpha=.8; g.fillText(sub,w/2,184); g.globalAlpha=1;
+  });
+}
+function gamesShelf(p,x,y,z,rot,w,h,d,levels){
+  const g=grp(p,x,y,z,rot), fm=mat(P.oakLt,.65), gap=(h-.03)/levels;
+  B(g,.03,h,d,-w/2+.015,0,0,fm); B(g,.03,h,d,w/2-.015,0,0,fm);
+  for(let i=0;i<=levels;i++) B(g,w,.03,d,0,i*gap,0,fm);
+  const G={
+    chess:gameTex('CHESS','strategy · 2 players','#2F2A26','#EFE3CF','knight'),
+    jackaroo:gameTex('JACKAROO','جاكارو · 4 players','#8C3B2E','#F4E6CF','cross'),
+    sequence:gameTex('SEQUENCE','cards & chips · 2–12','#1F4E79','#F2F2EA','chips'),
+    uno:gameTex('UNO','card game · 2–10','#B8322A','#FFF6E5','suits'),
+    baloot:gameTex('BALOOT','بلوت · playing cards','#1E5B4A','#F5EEDC','suits'),
+    domino:gameTex('DOMINOES','classic · 2–4','#F3EDE3','#2F3A38','dots'),
+    tower:gameTex('TOWER','stacking blocks','#D4B086','#3A2A1C','tower'),
+    words:gameTex('WORD TILES','word game · 2–4','#545A2B','#F5EEE2','letters'),
+    ludo:gameTex('LUDO','board game · 2–4','#E3C257','#2F3A38','grid'),
+    cards:gameTex('PLAYING CARDS','two decks','#6A9398','#F7F2E9','suits')
+  };
+  const side=c=>mat(c,.7);
+  // a box standing with its cover facing the room (+z)
+  const cover=(key,cx,base,bw,bh,bd,edge)=>{ const e=side(edge); const m=new T.Mesh(new T.BoxGeometry(bw,bh,bd),[e,e,e,e,new T.MeshStandardMaterial({map:G[key],roughness:.6}),e]); m.position.set(cx,base+bh/2,d/2-bd/2-.02); m.castShadow=true; g.add(m); };
+  // a box lying flat, cover facing up, turned a little toward the room
+  const flat=(key,cx,base,bw,bh,bd,edge)=>{ const e=side(edge); const m=new T.Mesh(new T.BoxGeometry(bw,bh,bd),[e,e,new T.MeshStandardMaterial({map:G[key],roughness:.6}),e,e,e]); m.position.set(cx,base+bh/2,0); m.rotation.x=0; m.castShadow=true; g.add(m); return m; };
+  const L=i=>i*gap+.03, x0=-w/2;
+  // level 0: big board-game boxes, covers out
+  cover('jackaroo',x0+.35,L(0),.5,.32,.06,'#8C3B2E'); cover('sequence',x0+.92,L(0),.5,.32,.06,'#1F4E79'); cover('ludo',x0+1.49,L(0),.5,.32,.06,'#E3C257'); cover('words',x0+2.06,L(0),.5,.32,.06,'#545A2B'); cover('chess',x0+2.63,L(0),.5,.32,.06,'#2F2A26'); cover('tower',x0+3.2,L(0),.42,.3,.06,'#D4B086');
+  // level 1: open chess board with pieces, jackaroo board on a stand, stacking tower
+  { const cb=new T.Mesh(new T.BoxGeometry(.4,.025,.3),[side('#5A3E2B'),side('#5A3E2B'),new T.MeshStandardMaterial({map:ctex(256,256,(q,W)=>{ for(let i=0;i<8;i++)for(let j=0;j<8;j++){ q.fillStyle=(i+j)%2?'#5A3E2B':'#EBD9B8'; q.fillRect(i*32,j*32,32,32);} }),roughness:.5}),side('#5A3E2B'),side('#5A3E2B'),side('#5A3E2B')]); cb.position.set(x0+.4,L(1)+.013,.02); g.add(cb);
+    const pw=mat('#F1E6D2',.4), pb=mat('#2B2622',.4);
+    for(let k=0;k<8;k++){ C(g,.012,.016,.04,x0+.24+k*.045,L(1)+.025,.1,pw,10); C(g,.012,.016,.04,x0+.24+k*.045,L(1)+.025,-.06,pb,10); }
+    [[-.14,pw,.1],[.1,pb,-.06]].forEach(([dx,m,dz])=>{ C(g,.018,.022,.07,x0+.4+dx,L(1)+.025,dz,m,12); S(g,.018,x0+.4+dx,L(1)+.105,dz,m); }); }
+  { const jb=new T.Mesh(new T.BoxGeometry(.34,.34,.02),[side('#A0522D'),side('#A0522D'),side('#A0522D'),side('#A0522D'),new T.MeshStandardMaterial({map:ctex(256,256,(q,W)=>{ q.fillStyle='#C98B55'; q.fillRect(0,0,W,W); q.fillStyle='#8C3B2E'; q.fillRect(100,10,56,236); q.fillRect(10,100,236,56); q.fillStyle='#F4E6CF'; for(let i=0;i<7;i++){ [[128,24+i*30],[24+i*30,128]].forEach(([a,b2])=>{ q.beginPath(); q.arc(a,b2,7,0,7); q.fill(); }); } ['#C0392B','#2E6FA8','#2E8B57','#E3C257'].forEach((c,i)=>{ q.fillStyle=c; q.beginPath(); q.arc([40,216,40,216][i],[40,40,216,216][i],26,0,7); q.fill(); }); }),roughness:.6}),side('#A0522D')]); jb.position.set(x0+1.1,L(1)+.18,.06); jb.rotation.x=-.12; jb.castShadow=true; g.add(jb); B(g,.3,.03,.08,x0+1.1,L(1),.1,mat('#6B4A33',.6)); }
+  for(let r=0;r<9;r++) for(let k=0;k<3;k++){ const bl=B(g,r%2?.025:.075,.015,r%2?.075:.025,x0+1.65+(r%2?(k-1)*.026:0),L(1)+r*.016,(r%2?0:(k-1)*.026),mat(['#E3C79A','#D4B086','#C9A273'][(r+k)%3],.7)); }
+  cover('domino',x0+2.2,L(1),.26,.16,.05,'#F3EDE3'); for(let k=0;k<5;k++){ B(g,.025,.05,.012,x0+2.55+k*.04,L(1),.08,mat('#F6F1E6',.4)); }
+  cover('sequence',x0+3.05,L(1),.46,.3,.06,'#1F4E79');
+  // level 2: card games, covers out, with a fanned deck on a small stand
+  cover('uno',x0+.3,L(2),.2,.13,.05,'#B8322A'); cover('uno',x0+.55,L(2),.2,.13,.05,'#B8322A');
+  cover('baloot',x0+.85,L(2),.2,.13,.05,'#1E5B4A'); cover('baloot',x0+1.1,L(2),.2,.13,.05,'#1E5B4A'); cover('cards',x0+1.4,L(2),.22,.14,.05,'#6A9398');
+  { const cardTex=ctex(128,180,(q,W,H)=>{ q.fillStyle='#FFFDF8'; q.fillRect(0,0,W,H); q.strokeStyle='#C9C2B4'; q.lineWidth=4; q.strokeRect(4,4,W-8,H-8); q.fillStyle='#B8322A'; q.font='70px '+AR; q.textAlign='center'; q.fillText('♥',W/2,110); q.font='700 28px '+AR; q.textAlign='left'; q.fillText('A',12,36); });
+    const cm=new T.MeshStandardMaterial({map:cardTex,roughness:.5,side:T.DoubleSide});
+    for(let k=0;k<5;k++){ const c=new T.Mesh(new T.PlaneGeometry(.09,.13),cm); c.position.set(x0+1.9+(k-2)*.03,L(2)+.09,.1+k*.002); c.rotation.z=(k-2)*-.22; g.add(c); } B(g,.2,.02,.06,x0+1.9,L(2),.1,mat('#6B4A33',.6)); }
+  cover('jackaroo',x0+2.4,L(2),.4,.28,.06,'#8C3B2E'); cover('chess',x0+3.05,L(2),.4,.28,.06,'#2F2A26');
+  // level 3: boxes lying flat in stacks, covers up
+  [['ludo','#E3C257'],['words','#545A2B'],['domino','#F3EDE3']].forEach(([k,c],i)=>flat(k,x0+.35,L(3)+i*.07,.44,.065,.3,c));
+  [['sequence','#1F4E79'],['chess','#2F2A26']].forEach(([k,c],i)=>flat(k,x0+.95,L(3)+i*.07,.44,.065,.3,c));
+  { const dc=C(g,.06,.05,.1,x0+1.4,L(3),0,mat('#6B4A33',.7),16); ['#FFFFFF','#B8322A'].forEach((c,i)=>B(g,.03,.03,.03,x0+1.55+i*.05,L(3),.08,mat(c,.4))); }
+  cover('tower',x0+1.95,L(3),.4,.28,.06,'#D4B086'); cover('baloot',x0+2.45,L(3),.22,.14,.05,'#1E5B4A'); cover('uno',x0+2.75,L(3),.22,.14,.05,'#B8322A');
+  plant(g,x0+3.2,L(3),.02,.55,P.white);
+  // level 4 (top): a few boxes and a trailing plant
+  cover('words',x0+.4,L(4),.42,.28,.06,'#545A2B'); cover('ludo',x0+.9,L(4),.42,.28,.06,'#E3C257');
+  potTrail(g,x0+1.6,L(4),.02,P.white,.5); cover('cards',x0+2.2,L(4),.22,.14,.05,'#6A9398'); cover('domino',x0+2.6,L(4),.26,.16,.05,'#F3EDE3');
+  return g;
+}
+
 function board(p,w,h,x,y,z,ry,tex,frameCol){ const g=grp(p,x,y,z,ry); B(g,w+.08,h+.08,.03,0,-.04,0,mat(frameCol||P.oak,.6)); const pl=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshStandardMaterial({map:tex,roughness:.85})); pl.position.set(0,h/2-.04,.017); g.add(pl); return g; }
 function mug(p,x,y,z,col){ C(p,.035,.03,.08,x,y,z,mat(col,.4),12); const h=new T.Mesh(new T.TorusGeometry(.022,.006,6,12),mat(col,.4)); h.position.set(x+.04,y+.045,z); p.add(h); }
 function jar(p,x,y,z,col,h){ h=h||.16; C(p,.05,.05,h,x,y,z,GLASS2,14); C(p,.043,.043,h*.6,x,y+.005,z,mat(col,.8),12); C(p,.052,.052,.025,x,y+h,z,mat(P.oak,.6),14); }
@@ -850,23 +917,26 @@ function build(){
   [[-3.3,2.05],[-2.0,1.5]].forEach(([x,y])=>{ C(bw1,.12,.12,.02,x,y1+y,-3.46,mat(P.brass,.3,.7),20).rotation.x=Math.PI/2; });
   board(bw1,.8,.2,-2.6,y1+2.35,-3.48,0,TX.self,P.oak);
   // workshop table A
-  longTable(G1,-2.0,y1,1.6,4.4,1.0,0);
-  const seatsA=[-3.7,-2.85,-2.0,-1.15,-.3];
+  longTable(G1,-1.7,y1,1.6,5.2,1.0,0);
+  const seatsA=[-3.75,-2.93,-2.11,-1.29,-.47,.35];
+  chair(G1,-4.65,y1,1.6,Math.PI/2,P.oakLt); chair(G1,1.25,y1,1.6,-Math.PI/2,P.oakLt);
   seatsA.forEach((x,i)=>{ chair(G1,x,y1,.93,0,P.oakLt); chair(G1,x,y1,2.27,Math.PI,P.oakLt);
     if(i%2===0) laptop(G1,x,y1+.76,1.3,0); else { B(G1,.3,.012,.22,x,y1+.76,1.3,mat('#FBF8F2',.8)); B(G1,.26,.01,.18,x+.02,y1+.772,1.3,mat([P.pale,P.blush,P.peach][i%3],.8)); }
     if(i%2===1) laptop(G1,x,y1+.76,1.9,Math.PI); else { const pal=C(G1,.1,.1,.012,x+.05,y1+.76,1.9,mat('#F7F2E9',.7),20); for(let k=0;k<4;k++) C(G1,.018,.018,.005,x+.05+Math.cos(k*1.5)*.06,y1+.772,1.9+Math.sin(k*1.5)*.06,mat([P.coral,P.teal,P.peach,P.pale][k],.6),10); }
   });
-  [-3.3,-.8].forEach(x=>{ C(G1,.035,.03,.1,x,y1+.76,1.6,mat(P.pale,.6),10); for(let k=0;k<5;k++) inst(G1,'box',x+(Math.random()-.5)*.03,y1+.9,1.6+(Math.random()-.5)*.03,.008,.15,.008,[P.oak,P.teal,P.coral,P.peach][k%4]); });
-  tulips(G1,-2.0,y1+.76,1.6,.8);
+  [-3.34,-.06].forEach(x=>{ C(G1,.035,.03,.1,x,y1+.76,1.6,mat(P.pale,.6),10); for(let k=0;k<5;k++) inst(G1,'box',x+(Math.random()-.5)*.03,y1+.9,1.6+(Math.random()-.5)*.03,.008,.15,.008,[P.oak,P.teal,P.coral,P.peach][k%4]); });
+  tulips(G1,-1.7,y1+.76,1.6,.8);
   // workshop table B (along z)
-  longTable(G1,3.4,y1,.8,3.4,1.0,Math.PI/2);
-  [-.5,.3,1.1,1.9].forEach((z,i)=>{ chair(G1,2.47,y1,z,Math.PI/2,P.oakLt); chair(G1,4.33,y1,z,-Math.PI/2,P.oakLt);
+  longTable(G1,3.4,y1,.5,3.8,1.0,Math.PI/2);
+  chair(G1,3.4,y1,-1.8,0,P.oakLt); chair(G1,3.4,y1,2.8,Math.PI,P.oakLt);
+  [-.95,-.2,.55,1.3,2.05].forEach((z,i)=>{ chair(G1,2.47,y1,z,Math.PI/2,P.oakLt); chair(G1,4.33,y1,z,-Math.PI/2,P.oakLt);
     if(i%2===0) laptop(G1,3.1,y1+.76,z,Math.PI/2); else B(G1,.22,.012,.3,3.1,y1+.76,z,mat('#FBF8F2',.8));
     if(i%2===1) laptop(G1,3.7,y1+.76,z,-Math.PI/2); else { B(G1,.22,.012,.3,3.7,y1+.76,z,mat(P.blush,.8)); }
   });
-  jar(G1,3.4,y1+.76,.7,P.pale,.14);
+  jar(G1,3.4,y1+.76,.18,P.pale,.14);
   // shelves: left wall & right wall
-  shelfUnit(lw1,-5.8,y1,.8,Math.PI/2,3.6,2.3,.38,5,P.oakLt,'craft');
+  gamesShelf(lw1,-5.8,y1,.8,Math.PI/2,3.6,2.3,.38,5);
+  board(lw1,.9,.22,-5.95,y1+2.45,.8,Math.PI/2,TX.games,P.oak);
   shelfUnit(rw1,5.8,y1,1.85,-Math.PI/2,2.9,2.3,.38,5,P.oakLt,'craft');
   board(rw1,.9,.22,5.95,y1+2.45,1.85,-Math.PI/2,TX.books,P.oak);
   // low shelf under front window
@@ -874,7 +944,7 @@ function build(){
   for(let i=0;i<6;i++) B(ls,.4,.25,.3,-1.2+i*.48,.04,0,mat([P.pale,'#EFE7DA',P.blush][i%3],.9));
   plant(ls,-1.1,.73,0,.5,P.white); jar(ls,-.4,.73,0,P.peach,.18); jar(ls,.1,.73,0,P.sage,.14); plant(ls,.9,.73,0,.5,P.white);
   // easels
-  easel(G1,-4.9,y1,-.25,Math.PI/2); easel(G1,-4.9,y1,.55,Math.PI/2+.3);
+  easel(G1,-3.3,y1,-.35,0); easel(G1,-2.3,y1,-.45,-.3);
   tallPlant(G1,-5.5,y1,3.1,P.white); tallPlant(G1,5.5,y1,-1.95,P.white); tallPlant(G1,.45,y1,3.1,P.pale);
   plant(G1,-1.05,y1,-3.2,1.0,P.white);
   // upper lights & hanging plants
@@ -918,9 +988,9 @@ const ZONES=[
  {n:7,f:0,name:'Table seating',pos:[-2.0,1.35,2.1],cam:[0,5.6,8.8],tgt:[-2,.5,2],walk:[2.1,.9,-3,2.2],dims:'4 tables · 8 seats',desc:"Oak tables on black bases with bentwood chairs, under white glass globe pendants, against a panelled wall with botanical prints and brass sconces."},
  {n:8,f:0,name:'Banquette',pos:[5.4,1.6,.4],cam:[1.8,3.2,3.6],tgt:[5.2,.8,.4],walk:[3.4,.4,5.5,.4],dims:'4.0 m · 3 tables · 9 seats',desc:"Grey tufted banquette with blush cushions along the side wall, below a window and wall lights."},
  {n:9,f:0,name:'Stairs & retail shelf',pos:[3.2,2.3,-2.9],cam:[8.6,4,2.6],tgt:[3.2,1.4,-2.9],walk:[5.7,-2.9,3,-2.9],dims:'16 steps · 1.1 m wide',desc:"Oak staircase on the back wall up to the workshop, with a shelf of coffee beans for sale underneath."},
- {n:10,f:1,name:'Main workshop table',pos:[-2.0,4.5,1.6],cam:[2.2,8.2,7.5],tgt:[-2,3.6,1.5],walk:[.9,.6,-2,1.6],dims:'4.4 × 1.0 m · 10 seats',desc:"Long oak table for painting, craft and group work, set with laptops, sketchbooks and paints under pale blue pendants and skylight."},
- {n:11,f:1,name:'Second workshop table',pos:[3.4,4.5,.8],cam:[8,7.5,5.5],tgt:[3.4,3.6,.8],walk:[1.4,-1.4,3.4,.8],dims:'3.4 × 1.0 m · 8 seats',desc:"A second table for small groups and classes, next to the side window and the art supplies shelf."},
- {n:12,f:1,name:'Supply shelves & easels',pos:[-5.6,5.3,.8],cam:[-.6,6.4,2.4],tgt:[-5.6,4.3,.6],walk:[-4.0,-.1,-5.8,.8],dims:'shelves 3.6 m + 2.9 m',desc:"Open oak shelving on both side walls for paints, brushes, paper and jars, with two easels beside it."},
+ {n:10,f:1,name:'Main workshop table',pos:[-1.7,4.5,1.6],cam:[3,9.6,8.6],tgt:[-1.7,3.4,1.2],walk:[.9,.6,-2,1.6],dims:'5.2 × 1.0 m · 14 seats',desc:"Long oak table for painting, craft and group work, set with laptops, sketchbooks and paints under pale blue pendants and skylight."},
+ {n:11,f:1,name:'Second workshop table',pos:[3.4,4.5,.5],cam:[8.6,8,6],tgt:[3.4,3.4,.5],walk:[1.4,-1.4,3.4,.8],dims:'3.8 × 1.0 m · 12 seats',desc:"A second table for small groups and classes, next to the side window and the art supplies shelf."},
+ {n:12,f:1,name:'Games shelf & easels',pos:[-5.6,5.3,.8],cam:[-.6,6.4,2.4],tgt:[-5.6,4.3,.6],walk:[-4.0,-.1,-5.8,.8],dims:'games shelf 3.6 m · art shelf 2.9 m',desc:"Games shelf on the left wall with board and card games on show: chess with pieces, a Jackaroo board, Sequence, UNO, Baloot cards, dominoes, a stacking tower, Ludo and word tiles. The art-supplies shelf on the right wall and two easels stay for workshops."},
  {n:13,f:1,name:'Prep station',pos:[-2.6,4.7,-3.1],cam:[0,6.1,1.2],tgt:[-2.6,4,-3.1],walk:[-.5,-1.8,-2.6,-3.2],dims:'2.4 m long',desc:"Pale blue cabinets with an oak top and a sink for washing brushes, with a pegboard of tools above."},
  {n:14,f:1,name:'Glass wall & skylight',pos:[-.7,5.9,.5],cam:[-.7,5.4,-1.9],tgt:[-.7,4.8,3.2],walk:[-1.0,-.6,-1.0,3.5],dims:'10 m glazing · roof 5.0 × 3.4 m',desc:"Steel-framed windows running nearly floor to ceiling, and a pitched glass skylight over the workshop that fills the room with daylight."},
  {n:15,f:1,name:'Restroom',pos:[-5.0,5.2,-2.4],cam:[-1.6,8.6,2],tgt:[-5,3.6,-2.4],walk:[-3.65,-.9,-4.6,-2.2],dims:'2.0 × 2.2 m',desc:"Enclosed restroom with a basin and round mirror; the door opens onto the workshop."}
@@ -1016,7 +1086,7 @@ function focusZone(z){
 const player={x:3.1,z:2.9,level:0,onStairs:false,yaw:0,pitch:-.05,y:1.6};
 const OBS={0:[[-5.6,.4,-.6,0],[-.2,.4,-2.2,-.6],[-6,-3.9,-1.56,-1.44],[-3.1,-2.94,-1.56,-1.44],[-3.06,-2.94,-3.5,-1.44],[-3,.8,-3.5,-2.9],[5.45,6,-1.6,2.4],[-5.95,-3.1,-3.5,-2.9],[-5.95,-5.25,-2.8,-2.1],[-4.85,-3.55,-2.12,-1.57],
   [-5.25,-4.55,1.75,2.45],[-3.35,-2.65,1.75,2.45],[-1.45,-.75,1.75,2.45],[.45,1.15,1.75,2.45],[4.7,5.3,-1.2,-.6],[4.7,5.3,.1,.7],[4.7,5.3,1.4,2.0],[1.2,3.0,-3.45,-2.95],[4.05,4.45,2.95,3.35]],
-  1:[[-6,-5.0,-1.36,-1.24],[-4.2,-3.94,-1.36,-1.24],[-4.06,-3.94,-3.5,-1.24],[-3.8,-1.4,-3.5,-2.92],[-4.2,.2,1.1,2.1],[2.9,3.9,-.9,2.5],[-6,-5.6,-1.0,2.6],[5.6,6,.4,3.3],[.9,4.1,3.05,3.5],[-5.25,-4.55,-.6,.9]]};
+  1:[[-6,-5.0,-1.36,-1.24],[-4.2,-3.94,-1.36,-1.24],[-4.06,-3.94,-3.5,-1.24],[-3.8,-1.4,-3.5,-2.92],[-4.3,.9,1.1,2.1],[2.9,3.9,-1.4,2.4],[-6,-5.6,-1.0,2.6],[5.6,6,.4,3.3],[.9,4.1,3.05,3.5],[-3.7,-1.9,-.75,.05]]};
 function blocked(x,z,lvl){ const r=.22; return OBS[lvl].some(o=>x>o[0]-r&&x<o[1]+r&&z>o[2]-r&&z<o[3]+r); }
 function inStair(x,z){ return x>HOLE[0]&&x<HOLE[1]&&z>-3.45&&z<-2.35; }
 function tryMove(nx,nz){
