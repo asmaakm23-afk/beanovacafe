@@ -1,4 +1,4 @@
-# Sip & Create — 3D café model
+# Beanova — 3D café model
 
 Interactive 3D model of a two-floor café and creative workshop (12 × 7 m per floor), with a drive-thru lane and a parking lot. Built with three.js r147.
 
